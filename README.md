@@ -1,223 +1,50 @@
-# Projeto de estudos - React Native 👋
+# React Native Navigation App
 
-<details>
-<summary style="font-size:22">🧭 Diferença entre `Stack` e `Tabs` no Expo Router</summary><hr/>
+## GitHub
 
-Quando usamos o `expo-router`, temos dois tipos principais de navegação: **Stack** e **Tabs**.  
-Cada um serve para um propósito diferente dentro do app.
+[Link do repositório](https://github.com/lauanderson-rael/react-native-navegation)
 
----
+## Navegação do App
 
-### 1. `Stack` (pilha de telas)
+**Bottom Tabs:**
 
-Representa uma **navegação em pilha**, como páginas empilhadas umas sobre as outras.
+- **Home** (com Stack interno)
+  - Home → Details (com parâmetros)
+- **Profile**
 
-- Cada vez que você navega para uma nova tela, ela é **empilhada sobre a anterior**.
-- Quando volta, ela é **desempilhada** (como apertar o botão “voltar” do celular).
-- É o tipo mais comum em apps: menu → detalhes → confirmar, etc.
+**Deep Links:**
 
-**Analogia:**  
-Pense como um baralho: cada carta é uma tela. Você coloca uma nova por cima (push), e tira ela depois (pop).
+- `app-base-rn://home`
+- `app-base-rn://home/details?id=123`
+- `app-base-rn://profile`
 
-📱 **Exemplo visual:**
+## Estados Tratados
 
-```
-Tela A (Home)
-↓
-Tela B (Detalhes)
-↓
-Tela C (Perfil)
-```
+### Loading
 
-**Exemplo de uso:**
+- **Home**: Simulação de carregamento (2s)
+- **Details**: Carregamento de detalhes (1.5s)
 
-```jsx
-import { Stack } from "expo-router";
-export default function Layout() {
-  return (
-    <Stack>
-      <Stack.Screen name="index" options={{ title: "Início" }} />
-      <Stack.Screen name="detalhes" options={{ title: "Detalhes" }} />
-    </Stack>
-  );
-}
-```
+### Empty
 
-Navegue com router.push("/detalhes") e volte com router.back().
+- **Home**: Estado quando não há dados (30% chance)
 
-### 2. `Tabs` (abas de navegação)
+### Error
 
-Representa uma navegação por abas (tab bar) — aquelas que ficam normalmente no rodapé do app.
+- **Details**: Erro de carregamento (40% chance) com botão "Tentar novamente"
 
-Ideal quando você quer mudar entre seções principais do app.
-
-Cada aba é independente, sem empilhar uma sobre a outra.
-
-Exemplo típico: “Home”, “Perfil”, “Configurações”.
-
-📱 Exemplo visual:
-
-```
-[ Home ] [ Pesquisar ] [ Perfil ]
-```
-
-Exemplo de uso:
-
-```jsx
-import { Tabs } from "expo-router";
-export default function Layout() {
-  return (
-    <Tabs>
-      <Tabs.Screen name="index" options={{ title: "Início" }} />
-      <Tabs.Screen name="perfil" options={{ title: "Perfil" }} />
-    </Tabs>
-  );
-}
-```
-
-</details>
-
-<details> 
-<summary style="font-size:22">🧭 O que é o `Layout` no Expo Router</summary><hr/>
-
-No **Expo Router**, o arquivo **`_layout.js`** (ou `_layout.tsx`) define **a estrutura de navegação** e o **layout base** das telas dentro de uma pasta.
-
-Ele funciona como **um “molde”** que organiza as telas e decide **como elas serão exibidas** — por exemplo, se usarão um **Stack**, **Tabs**, **Drawer**, ou outro tipo de navegação.
-
----
-
-### Como o `Layout` funciona
-
-- O Expo Router usa **o sistema de pastas** (`app/`) para criar automaticamente as rotas do app.
-- Dentro de cada pasta, você pode criar um **`_layout.js`** para definir **como as telas daquela pasta se comportam**.
-- Esse layout **engloba todas as telas** dentro da mesma pasta.
-
-**Exemplo de estrutura:**
+## 📁 Estrutura
 
 ```
 app/
-├── _layout.js ← Layout principal do app
-├── index.js ← Tela inicial
-├── detalhes.js ← Tela de detalhes
-└── perfil/
-├── _layout.js ← Layout específico da aba "perfil"
-├── index.js ← Tela principal do perfil
-└── editar.js ← Tela de edição de perfil
+├── _layout.tsx (Stack raiz)
+├── index.tsx (Redirect)
+└── (tabs)/
+    ├── _layout.tsx (Bottom Tabs)
+    ├── home/
+    │   ├── _layout.tsx (Stack interno)
+    │   ├── index.tsx
+    │   └── details.tsx
+    ├── profile/
+        ├── index.tsx
 ```
-
-### Exemplo 1 com `Stack`
-
-Se você quer que as telas sejam empilhadas (navegação tradicional), use:
-
-```jsx
-// app/_layout.js
-import { Stack } from "expo-router";
-
-export default function Layout() {
-  return (
-    <Stack>
-      <Stack.Screen name="index" options={{ title: "Início" }} />
-      <Stack.Screen name="detalhes" options={{ title: "Detalhes" }} />
-    </Stack>
-  );
-}
-```
-
-Isso faz com que index.js e detalhes.js usem o mesmo Stack.
-Quando você chamar router.push("/detalhes"), a tela de detalhes é empilhada sobre a inicial.
-
-### Exemplo 2 com `Tabs`
-
-Se você quer um menu de abas na parte inferior (navegação por seções), use:
-
-```jsx
-// app/_layout.js
-import { Tabs } from "expo-router";
-
-export default function Layout() {
-  return (
-    <Tabs>
-      <Tabs.Screen name="index" options={{ title: "Início" }} />
-      <Tabs.Screen name="perfil" options={{ title: "Perfil" }} />
-    </Tabs>
-  );
-}
-```
-
-Agora o app terá abas fixas para alternar entre “Início” e “Perfil”.
-
-### Exemplo 3 com `Layouts aninhados`
-
-Você também pode misturar Tabs e Stack, criando layouts dentro de layouts.
-
-```jsx
-// app/_layout.js → Layout principal com Tabs
-import { Tabs } from "expo-router";
-
-export default function Layout() {
-  return (
-    <Tabs>
-      <Tabs.Screen name="home" />
-      <Tabs.Screen name="perfil" />
-    </Tabs>
-  );
-}
-
-// app/home/_layout.js → Layout interno do grupo "home" com Stack
-import { Stack } from "expo-router";
-
-export default function HomeLayout() {
-  return (
-    <Stack>
-      <Stack.Screen name="index" options={{ title: "Página Inicial" }} />
-      <Stack.Screen name="detalhes" options={{ title: "Detalhes" }} />
-    </Stack>
-  );
-}
-```
-
-Assim:
-
-- O app tem abas (“Home” e “Perfil”).
-- Dentro da aba Home, há uma navegação em pilha entre “Página Inicial” e “Detalhes”.
-
-</details>
-
-## Comece aqui
-
-1. Instalar dependencias
-
-   ```bash
-   npm install
-   ```
-
-2. Iniciar o app
-
-   ```bash
-   npx expo start
-   ```
-
-Na saída, você encontrará opções para abrir o aplicativo em um
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-## Comando para resetar o projeto
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-## Documentação
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Comunidade
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
