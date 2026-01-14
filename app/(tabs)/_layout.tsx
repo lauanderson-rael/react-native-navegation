@@ -1,9 +1,29 @@
-import { Stack } from "expo-router";
+import { FontAwesome } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
 
-export default function Layout() {
+export default function TabLayout() {
   return (
-    <Stack>
-      <Stack.Screen name="dashboard" options={{ headerShown: false }} />
-    </Stack>
+    <Tabs>
+      <Tabs.Screen
+        name="home"
+        options={{
+          title: "Home",
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="home" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile/index"
+        options={{
+          title: "Profile",
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="user" size={size} color={color} />
+          ),
+        }}
+      />
+    </Tabs>
   );
 }

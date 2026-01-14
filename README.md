@@ -1,8 +1,26 @@
 # React Native Navigation App
 
-## GitHub
+Este repositório foi construído usando o expo.
 
-[Link do repositório](https://github.com/lauanderson-rael/react-native-navegation)
+## Para começar:
+
+1. Clone o projeto:
+
+   ```bash
+   git clone git@github.com:lauanderson-rael/react-native-navegation.git
+   ```
+
+2. Instale as depedências:
+
+   ```bash
+   npm install
+   ```
+
+3. Startando o projeto
+
+   ```bash
+   npm run start
+   ```
 
 ## Navegação do App
 
@@ -48,3 +66,9 @@ app/
     ├── profile/
         ├── index.tsx
 ```
+
+## Telas
+
+<img width="225" height="481" alt="image" src="./images/1.png" />
+<img width="225" height="481" alt="image" src="./images/2.png" />
+<img width="225" height="481" alt="image" src="./images/3.png" />
